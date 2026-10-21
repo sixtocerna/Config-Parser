@@ -48,6 +48,10 @@ def apply_overwrites(config_as_list:list[str], overwrites:list[str])->dict[str, 
     output = {}
     for c in configs:
         key, value = c.split(':')
+        try:
+            value = float(value)
+        except ValueError:
+            pass
         output[key] = value
     return output
 
@@ -85,7 +89,9 @@ def main(config_filename:str, overwrites:list[str]):
     expanded_config = expand_sentinels(config, config_dir)
     config_as_list = transform_dict_to_list(expanded_config, None)
     overwritten_config = apply_overwrites(config_as_list, overwrites)
-    print(overwritten_config)
+    print("Original YAML".center(50, '-'))
+    print(yaml_from_config_dict(expanded_config))
+    print("YAML after overwrites".center(50, '-'))
     print(yaml_from_config_dict(overwritten_config))
 
 if __name__=='__main__':
